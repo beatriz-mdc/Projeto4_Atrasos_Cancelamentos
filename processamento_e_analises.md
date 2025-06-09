@@ -1,53 +1,80 @@
-1. Processar e preparar a base de dados
+# Etapas do Projeto
 
-Os dados foram disponibilizados pela Laboratoria em pasta zipada com 3 planilhas CSV nomeadas “AIRLINE_CODE_DICTIONARY”, “DOT_CODE_DICTIONARY” e “flights_202301”. Esses arquivos contém informações sobre os voôs realizados no período, as companhias aéreas e os órgãos operadores das aeronaves. Ao subir os arquivos no bigquery, os mesmos foram renomeados:
+Os dados foram disponibilizados pela Laboratoria em pasta zipada com 3 planilhas CSV nomeadas “AIRLINE_CODE_DICTIONARY”, “DOT_CODE_DICTIONARY” e “flights_202301”. Esses arquivos contém informações sobre os voôs realizados no período de janeiro de 2023, as companhias aéreas e os órgãos operadores das aeronaves. Ao subir os arquivos no bigquery, os mesmos foram renomeados:
 
-"AIRLINE_CODE_DICTIONARY" - "operador_aeronave";
-“DOT_CODE_DICTIONARY” - "companhia_aerea";
-"flights_202301" - "tabela_voos".
+- "AIRLINE_CODE_DICTIONARY" - "operador_aeronave";
+- “DOT_CODE_DICTIONARY” - "companhia_aerea";
+- "flights_202301" - "tabela_voos".
 
-Identificar e Tratar Valores Nulos
+Para iniciar o projeto foram definidas "Perguntas de Negócio" divididas em 3 frentes. Abaixo os questionamentos a serem respondidos:
 
-996 na "companhia_aerea" coluna code, 1000 na coluna Description.
-9978 na "tabela_voos" coluna DEP_TIME, 9982 na coluna DEP_DELAY, 10197 na coluna TAXI_OUT, 10197 na coluna WHEELS_OFF, 10519 na coluna WHEELS_ON, 10519 na coluna TAXI_IN, 10519 na coluna ARR_TIME, 11640 na coluna ARR_DELAY, 1 na coluna CRS_ELAPSED_TIME, 11640 na coluna ELAPSED_TIME, 11640 na coluna AIR_TIME, 422124 na coluna DELAY_DUE_CARRIER, 422124 na coluna DELAY_DUE_WEATHER, 422124 na coluna DELAY_DUE_NAS, 422124 na coluna DELAY_DUE_SECURITY e 422124 na coluna DELAY_DUE_LATE_AIRCRAFT.
+**Operacionais**
+- Quais são as rotas com maior frequência e magnitude (tempo médio) de atrasos e cancelamentos?
+- Quais são os principais motivos dos atrasos e cancelamentos registrados, e como esses motivos se distribuem pelas rotas/companhias aéreas mais problemáticas?
+- Como os atrasos variam por dia da semana e período do dia, e qual o impacto do “efeito cascata” nesses períodos?
+- Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
 
-Como tratamento, os valores nulos da tabela "companhia_aerea" foram excluídos. Abaixo query:
+**Financeiras**
+- Quais rotas, períodos do dia e principais motivos de atraso estão associados aos atrasos mais longos, indicando potencial impacto financeiro adverso?
 
+**Estratégicas**
+- Com base nos padrões identificados (rotas, horários, aeroportos, motivos de atraso/cancelamento), quais são as principais áreas de foco recomendadas para ações de melhoria operacional?
+- Existe algum aeroporto de origem ou destino que consistentemente apresenta uma taxa de atraso/cancelamento desproporcionalmente alta (controlando por volume de voos)?
+- Quais fatores operacionais exacerbam o “efeito cascata”, e quais estratégias de planejamento de contingência poderiam ser consideradas?
+
+***1. Processar e preparar a base de dados***
+
+***Identificar e Tratar Valores Nulos***
+
+Foram encontrados valores nulos na tabela "companhia_aerea" e na "tabela_voos". Como tratamento, os valores nulos da tabela "companhia_aerea" foram excluídos. Abaixo query:
+
+```sql
 DELETE FROM `projeto-4-461417.voos.companhia_aerea`
 WHERE Code IS NULL;
+```
 
+```sql
 DELETE FROM `projeto-4-461417.voos.companhia_aerea`
 WHERE Description IS NULL;
+```
 
 Na tabela "tabela_voos" os valores nulos foram mantidos, pois foi entendido que são voos cancelados ou desviados.
 
-Identificar e Tratar Valores Duplicados
+***Identificar e Tratar Valores Duplicados***
 
-Foram encontrados valores duplicados na tabela "companhia_aerea". 
-Query:
+Foram encontrados valores duplicados na tabela "companhia_aerea". Query:
 
+```sql
 SELECT 
 Code,
 COUNT (*) as duplicatas
 FROM `projeto-4-461417.voos.companhia_aerea`
 GROUP BY Code
 HAVING COUNT (*) >1
+```
 
 Abaixo as queries utilizadas para excluir as duplicatas:
 
+```sql
 DELETE FROM `projeto-4-461417.voos.companhia_aerea`
 WHERE Description = 'AXIS AVIATION SWITZERLAND AG: XQQ'
+```
 
+```sql
 DELETE FROM `projeto-4-461417.voos.companhia_aerea`
 WHERE Description = 'WESTERN AIR LTD: WU'
+```
 
+```sql
 DELETE FROM `projeto-4-461417.voos.companhia_aerea`
 WHERE Description = 'SPARFELL MALTA LTD: QFX'
+```
 
-Verificar e Alterar o Tipo de Dados
+***Verificar e Alterar o Tipo de Dados***
 
 Foi corrigido o formato dos campos que registram horários. Abaixo query:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos` AS
 SELECT 
 *,
@@ -141,13 +168,14 @@ CASE
     )
   ELSE NULL
 END AS arr_time_parsed
-
 FROM `projeto-4-461417.voos.tabela_voos`
+```
 
-Unir Tabelas
+***Unir Tabelas***
 
 As 3 tabelas foram unificadas. Abaixo queries:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos` AS
 SELECT  
 a.*,
@@ -157,7 +185,9 @@ JOIN
 `projeto-4-461417.voos.code_cancel` b
 ON
 a.CANCELLATION_CODE = b.string_field_0
+```
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos` AS
 SELECT  
 a.*,
@@ -167,7 +197,9 @@ JOIN
 `projeto-4-461417.voos.companhia_aerea` b
 ON
 a.DOT_CODE = b.Code
+```
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos` AS
 SELECT  
 a.*,
@@ -177,11 +209,13 @@ JOIN
 `projeto-4-461417.voos.operador_aeronave` b
 ON
 a.AIRLINE_CODE = b.string_field_0
+```
 
-Criar novas variáveis
+***Criar novas variáveis***
 
 Novas variáveis foram criadas e unificadas na tabela final. Abaixo queries:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT 
   fl_date AS flight_date,
@@ -228,9 +262,11 @@ SELECT
   delay_due_security,
   delay_due_late_aircraft,
 FROM `projeto-4-461417.voos.tabela_voos`
+```
 
 Variável para atraso:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT
 *,
@@ -238,9 +274,11 @@ CASE WHEN arr_delay >= 15 THEN 1
 ELSE 0
 END AS atraso
 FROM `projeto-4-461417.voos.tabela_voos_final`
+```
 
 Variável para atraso em cascata:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT 
 *,
@@ -249,10 +287,12 @@ CASE
     ELSE 0 
 END AS cascade_delay_flag,
  FROM `projeto-4-461417.voos.tabela_voos_final`
+```
 
 Atraso na chegada:
 
- CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
+```sql
+CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT 
 *,
 CASE
@@ -263,9 +303,11 @@ CASE
     ELSE 'On Time or Earlier'
 END AS range_arr_delay,
  FROM `projeto-4-461417.voos.tabela_voos_final`
+```
 
 Causas de atraso:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT
 *,
@@ -282,11 +324,13 @@ CASE
         delay_due_carrier, delay_due_weather, delay_due_nas, delay_due_security, delay_due_late_aircraft) THEN 'Late Aircraft'
     ELSE 'No Delay Cause'
 END AS main_delay_cause,
- FROM `projeto-4-461417.voos.tabela_voos_final`
+FROM `projeto-4-461417.voos.tabela_voos_final`
+```
 
 Período da partida:
 
- CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
+```sql
+CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT
 *,
 CASE
@@ -296,13 +340,15 @@ CASE
     ELSE 'Red-Eye'
 END AS scheduled_dep_period
  FROM `projeto-4-461417.voos.tabela_voos_final`
+```
 
-2. Análise Exploratória
+***2. Análise Exploratória***
 
-Ver Distribuição
+***Ver Distribuição***
 
 Identificamos que a variável "arr_delay" contabiliza todo o atraso ocorrido no voo. Dessa forma, fizemos a análise de distribuição dessa variável.
 
+```python
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -327,12 +373,15 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+```
 
 ![image](https://github.com/user-attachments/assets/765682e3-d0b2-4b15-9a65-5cf9b1d1c996)
 
 Podemos ver que a maioria dos atrasos ocorrem com até 50 minutos e que muitos voos também apresentam valores negativos, ou seja, saíram com antecedência.
-Na variável "taxi_time_total" foi contabilizado todo o tempo de taxeamento do aviao durante um voo. Abaixo a análise de distribuição dessa variável:
 
+Na variável "taxi_time_total" foi contabilizado todo o tempo de taxeamento do avião durante um voo. Abaixo a análise de distribuição dessa variável:
+
+```python
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -356,15 +405,17 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+```
 
 ![image](https://github.com/user-attachments/assets/e89a8c94-3311-4129-a09b-61b51bf6f3f6)
 
 Podemos ver que a maioria dos aviões levam até 30 minutos para fazer o taxeamento completo dentro de um voo, incluindo o taxeamento de decolagem e pouso.
 
-Calcular quartis, decis ou percentis
+***Calcular quartis, decis ou percentis***
 
 Abaixo a query utilizada para calcular os quartis:
 
+```sql
 CREATE OR REPLACE TABLE `projeto-4-461417.voos.tabela_voos_final` AS
 SELECT
 *,
@@ -379,38 +430,48 @@ NTILE(4) OVER (ORDER BY distance) AS distance_quartile,
 # cria quartis para atrasos na chegada
 NTILE(4) OVER (ORDER BY arr_delay) AS arr_delay_quartile,
  FROM `projeto-4-461417.voos.tabela_voos_final`
+```
 
-3. Análise
+***3. Análise***
 
-Validar Hipótese
+***Validar Hipótese***
 
-Operacionais:
-Quais são as rotas com maior frequência e magnitude (tempo médio) de atrasos e cancelamentos?
+Abaixo validamos as "Perguntas de Negócios" feitas inicialmente.
+
+**Operacionais**
+- Quais são as rotas com maior frequência e magnitude (tempo médio) de atrasos e cancelamentos?
 
 ![image](https://github.com/user-attachments/assets/6afd212c-8b8d-4986-a668-bd224dfb736a)
 
 ![image](https://github.com/user-attachments/assets/5eb384ad-0a56-4c92-934d-48a3dec666ff)
 
-Quais são os principais motivos dos atrasos e cancelamentos registrados, e como esses motivos se distribuem pelas rotas/companhias aéreas mais problemáticas?
+- Quais são os principais motivos dos atrasos e cancelamentos registrados, e como esses motivos se distribuem pelas rotas/companhias aéreas mais problemáticas?
 
 ![image](https://github.com/user-attachments/assets/36a106a3-5faf-4802-81b5-fd4f2dabcb48)
 
 ![image](https://github.com/user-attachments/assets/35cc59fb-ec37-4267-8d45-5c3aeb6e3ed6)
 
-Como os atrasos variam por dia da semana e período do dia, e qual o impacto do “efeito cascata” nesses períodos?
+- Como os atrasos variam por dia da semana e período do dia, e qual o impacto do “efeito cascata” nesses períodos?
 
 ![image](https://github.com/user-attachments/assets/19dcd4d0-1492-429b-84de-bb55f8629e54)
 
-Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
+- Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
 
 ![image](https://github.com/user-attachments/assets/411ae4fc-ee09-422c-9d1b-d45b02bfd80d)
 
-Financeiras:
-Quais rotas, períodos do dia e principais motivos de atraso estão associados aos atrasos mais longos, indicando potencial impacto financeiro adverso?
+**Financeiras**
+- Quais rotas, períodos do dia e principais motivos de atraso estão associados aos atrasos mais longos, indicando potencial impacto financeiro adverso?
 
 ![image](https://github.com/user-attachments/assets/6034c4b9-2278-4ef5-919e-e3c6bb66e614)
 
-Estratégicas:
-Com base nos padrões identificados (rotas, horários, aeroportos, motivos de atraso/cancelamento), quais são as principais áreas de foco recomendadas para ações de melhoria operacional?
-Existe algum aeroporto de origem ou destino que consistentemente apresenta uma taxa de atraso/cancelamento desproporcionalmente alta (controlando por volume de voos)?
-Quais fatores operacionais exacerbam o “efeito cascata”, e quais estratégias de planejamento de contingência poderiam ser consideradas?
+**Estratégicas**
+- Com base nos padrões identificados (rotas, horários, aeroportos, motivos de atraso/cancelamento), quais são as principais áreas de foco recomendadas para ações de melhoria operacional?
+As áreas de foco devem ser uma melhor distribuição de dias e horários de voos para retirar o gargalo da quarta-feira e do período da tarde e uma tentativa de diminuir o tempo de taxeamento nos aeroportos de origem e destino para evitar efeito cascata de atraso.
+
+- Existe algum aeroporto de origem ou destino que consistentemente apresenta uma taxa de atraso/cancelamento desproporcionalmente alta (controlando por volume de voos)?
+
+Os aeroportos de Houston e Baton Rouge apresentam as principais taxas de atrasos e cancelamentos mas nada que seja desproporcional em comparação aos demais do top 5 analisando.
+
+![image](https://github.com/user-attachments/assets/d14ed481-3cbc-46d6-911e-9e606ddff2b0)
+
+- Quais fatores operacionais exacerbam o “efeito cascata”, e quais estratégias de planejamento de contingência poderiam ser consideradas?
