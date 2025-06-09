@@ -453,7 +453,11 @@ Abaixo validamos as "Perguntas de Negócios" feitas inicialmente.
 
 - Como os atrasos variam por dia da semana e período do dia, e qual o impacto do “efeito cascata” nesses períodos?
 
-![image](https://github.com/user-attachments/assets/19dcd4d0-1492-429b-84de-bb55f8629e54)
+![image](https://github.com/user-attachments/assets/43d88ee6-b067-4db5-931f-22b33d973afb)
+
+O principal dia com atraso é quarta-feira e o período da tarde. O efeito cascada sobre isso permece no mesmo dia e período, porém, caindo quase pela metade o atraso inicial.
+
+![image](https://github.com/user-attachments/assets/65fc3b2e-1422-4fb1-b009-b65c64ec114b)
 
 - Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
 
@@ -466,11 +470,12 @@ Abaixo validamos as "Perguntas de Negócios" feitas inicialmente.
 
 **Estratégicas**
 - Com base nos padrões identificados (rotas, horários, aeroportos, motivos de atraso/cancelamento), quais são as principais áreas de foco recomendadas para ações de melhoria operacional?
+
 As áreas de foco devem ser uma melhor distribuição de dias e horários de voos para retirar o gargalo da quarta-feira e do período da tarde e uma tentativa de diminuir o tempo de taxeamento nos aeroportos de origem e destino para evitar efeito cascata de atraso.
 
 - Existe algum aeroporto de origem ou destino que consistentemente apresenta uma taxa de atraso/cancelamento desproporcionalmente alta (controlando por volume de voos)?
 
-Os aeroportos de Houston e Baton Rouge apresentam as principais taxas de atrasos e cancelamentos mas nada que seja desproporcional em comparação aos demais do top 5 analisando.
+Os aeroportos de Houston e Baton Rouge apresentam as principais taxas de atrasos e cancelamentos mas nada que seja desproporcional em comparação aos demais do top 5 analisado.
 
 ![image](https://github.com/user-attachments/assets/d14ed481-3cbc-46d6-911e-9e606ddff2b0)
 
