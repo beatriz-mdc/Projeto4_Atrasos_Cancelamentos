@@ -395,8 +395,22 @@ Quais são os principais motivos dos atrasos e cancelamentos registrados, e como
 
 ![image](https://github.com/user-attachments/assets/36a106a3-5faf-4802-81b5-fd4f2dabcb48)
 
+![image](https://github.com/user-attachments/assets/35cc59fb-ec37-4267-8d45-5c3aeb6e3ed6)
 
+Como os atrasos variam por dia da semana e período do dia, e qual o impacto do “efeito cascata” nesses períodos?
 
+![image](https://github.com/user-attachments/assets/19dcd4d0-1492-429b-84de-bb55f8629e54)
 
+Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
 
+![image](https://github.com/user-attachments/assets/411ae4fc-ee09-422c-9d1b-d45b02bfd80d)
 
+Financeiras:
+Quais rotas, períodos do dia e principais motivos de atraso estão associados aos atrasos mais longos, indicando potencial impacto financeiro adverso?
+
+![image](https://github.com/user-attachments/assets/6034c4b9-2278-4ef5-919e-e3c6bb66e614)
+
+Estratégicas:
+Com base nos padrões identificados (rotas, horários, aeroportos, motivos de atraso/cancelamento), quais são as principais áreas de foco recomendadas para ações de melhoria operacional?
+Existe algum aeroporto de origem ou destino que consistentemente apresenta uma taxa de atraso/cancelamento desproporcionalmente alta (controlando por volume de voos)?
+Quais fatores operacionais exacerbam o “efeito cascata”, e quais estratégias de planejamento de contingência poderiam ser consideradas?
