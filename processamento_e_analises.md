@@ -441,42 +441,36 @@ Abaixo validamos as "Perguntas de Negócios" feitas inicialmente.
 **Operacionais**
 - Quais são as rotas com maior frequência e magnitude (tempo médio) de atrasos e cancelamentos?
 
-![image](https://github.com/user-attachments/assets/6afd212c-8b8d-4986-a668-bd224dfb736a)
-
-![image](https://github.com/user-attachments/assets/5eb384ad-0a56-4c92-934d-48a3dec666ff)
+![image](https://github.com/user-attachments/assets/178c65a5-0d08-420a-be04-a9f8fda5e7a0)
 
 - Quais são os principais motivos dos atrasos e cancelamentos registrados, e como esses motivos se distribuem pelas rotas/companhias aéreas mais problemáticas?
 
-![image](https://github.com/user-attachments/assets/36a106a3-5faf-4802-81b5-fd4f2dabcb48)
-
-![image](https://github.com/user-attachments/assets/35cc59fb-ec37-4267-8d45-5c3aeb6e3ed6)
+![image](https://github.com/user-attachments/assets/b036f634-fa49-4aed-afb8-9d230c619bfb)
 
 - Como os atrasos variam por dia da semana e período do dia, e qual o impacto do “efeito cascata” nesses períodos?
 
 ![image](https://github.com/user-attachments/assets/43d88ee6-b067-4db5-931f-22b33d973afb)
 
-O principal dia com atraso é quarta-feira e o período da tarde. O efeito cascada sobre isso permece no mesmo dia e período, porém, caindo quase pela metade o atraso inicial.
+O principal dia com atraso é quarta-feira e o período da tarde. O efeito cascada sobre isso permece no mesmo dia e período, mantendo quase metade do atraso inicial.
 
 ![image](https://github.com/user-attachments/assets/65fc3b2e-1422-4fb1-b009-b65c64ec114b)
 
 - Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
 
-![image](https://github.com/user-attachments/assets/411ae4fc-ee09-422c-9d1b-d45b02bfd80d)
+![image](https://github.com/user-attachments/assets/1921cdf7-f91a-4c38-b10c-6e93b18b07c4)
 
 **Financeiras**
 - Quais rotas, períodos do dia e principais motivos de atraso estão associados aos atrasos mais longos, indicando potencial impacto financeiro adverso?
 
-![image](https://github.com/user-attachments/assets/6034c4b9-2278-4ef5-919e-e3c6bb66e614)
+![image](https://github.com/user-attachments/assets/f9d93958-e0fc-4522-88df-c16ea7a716ba)
 
 **Estratégicas**
 - Com base nos padrões identificados (rotas, horários, aeroportos, motivos de atraso/cancelamento), quais são as principais áreas de foco recomendadas para ações de melhoria operacional?
 
-As áreas de foco devem ser uma melhor distribuição de dias e horários de voos para retirar o gargalo da quarta-feira e do período da tarde e uma tentativa de diminuir o tempo de taxeamento nos aeroportos de origem e destino para evitar efeito cascata de atraso.
+As áreas de foco devem ser uma melhor distribuição de dias e horários de voos para retirar o gargalo da quarta-feira e do período da tarde. Além disso, uma tentativa de diminuição do tempo de taxeamento nos aeroportos de origem e destino pode ajudar a evitar efeito cascata de atraso.
 
 - Existe algum aeroporto de origem ou destino que consistentemente apresenta uma taxa de atraso/cancelamento desproporcionalmente alta (controlando por volume de voos)?
 
-Os aeroportos de Houston e Baton Rouge apresentam as principais taxas de atrasos e cancelamentos mas nada que seja desproporcional em comparação aos demais do top 5 analisado.
-
-![image](https://github.com/user-attachments/assets/d14ed481-3cbc-46d6-911e-9e606ddff2b0)
+![image](https://github.com/user-attachments/assets/cbd6c42b-41f1-4f26-a3d2-f90e8a648934)
 
 - Quais fatores operacionais exacerbam o “efeito cascata”, e quais estratégias de planejamento de contingência poderiam ser consideradas?
