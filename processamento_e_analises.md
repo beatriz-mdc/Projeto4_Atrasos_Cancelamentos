@@ -457,7 +457,7 @@ O principal dia com atraso é quarta-feira e o período da tarde. O efeito casca
 
 - Quais aeroportos de origem e destino apresentam os maiores tempos médios de taxiamento, indicando possíveis gargalos no solo?
 
-![image](https://github.com/user-attachments/assets/1921cdf7-f91a-4c38-b10c-6e93b18b07c4)
+![image](https://github.com/user-attachments/assets/8b7dcedf-d708-4ccc-a861-3a1751cc806f)
 
 **Financeiras**
 - Quais rotas, períodos do dia e principais motivos de atraso estão associados aos atrasos mais longos, indicando potencial impacto financeiro adverso?
