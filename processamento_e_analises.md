@@ -474,3 +474,5 @@ As áreas de foco devem ser uma melhor distribuição de dias e horários de voo
 ![image](https://github.com/user-attachments/assets/cbd6c42b-41f1-4f26-a3d2-f90e8a648934)
 
 - Quais fatores operacionais exacerbam o “efeito cascata”, e quais estratégias de planejamento de contingência poderiam ser consideradas?
+
+Atrasos em voos anteriores, problemas de manutenção, filas para decolar ou pousar e falta de comunicação entre equipes aumentam o efeito cascata. É importante planejar tempo extra entre os voos, ter aviões e equipes reservas disponíveis e melhorar a troca de informações entre todos no aeroporto.
